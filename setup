@@ -3,12 +3,7 @@
 set -e
 
 main() {
-    setup_rust
     git config core.hooksPath .githooks
-}
-
-setup_rust() {
-    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s - -y
 }
 
 main
