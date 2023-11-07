@@ -24,3 +24,15 @@ jobs:
       - uses: actions/download-artifact@v3
 
       - run: zip -r executables.zip artifact
+
+      - uses: ncipollo/release-action@v1.13.0
+        with:
+          name: "Daily Build"
+          allowUpdates: false
+          artifacts: "executables.zip"
+          replacesArtifacts: true
+          removeArtifacts: true
+          prerelease: true
+          artifactErrorsFailBuild: true
+          updateOnlyUnreleased: true
+          makeLatest: false
