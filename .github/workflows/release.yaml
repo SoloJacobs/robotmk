@@ -2,15 +2,8 @@
 name: "Upload all artifacts"
 on:
   push:
-    paths:
-      - .github/workflows/release.yaml
-      - .github/workflows/rcc.yaml
-      - .github/workflows/robotmk.yaml
-  pull_request:
-    paths:
-      - .github/workflows/release.yaml
-      - .github/workflows/rcc.yaml
-      - .github/workflows/robotmk.yaml
+    tags:
+    - '*'
 
 jobs:
   build_rcc:
@@ -36,3 +29,4 @@ jobs:
           artifactErrorsFailBuild: true
           updateOnlyUnreleased: true
           makeLatest: false
+          tag: "v2release"
