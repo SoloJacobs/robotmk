@@ -22,11 +22,12 @@ jobs:
     needs: [tests, build_rcc, build_robotmk]
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ""  # default branch
       - uses: actions/download-artifact@v3
       - run: zip -r executables.zip artifact
       - name: Push release tag
         run: |
-          git checkout main
           git tag ${{ inputs.tag }}
           git push --tags
       - uses: ncipollo/release-action@v1.13.0
@@ -37,6 +38,7 @@ jobs:
           removeArtifacts: true
           prerelease: true
           draft: true
+          omitBody: true
           artifactErrorsFailBuild: true
           updateOnlyUnreleased: true
           makeLatest: false
