@@ -24,11 +24,6 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/download-artifact@v3
       - run: zip -r executables.zip artifact
-      - name: Push release tag
-        run: |
-          git checkout main
-          git tag ${{ inputs.tag }}
-          git push --tags
       - uses: ncipollo/release-action@v1.13.0
         with:
           allowUpdates: false
@@ -37,6 +32,7 @@ jobs:
           removeArtifacts: true
           prerelease: true
           draft: true
+          body: false
           artifactErrorsFailBuild: true
           updateOnlyUnreleased: true
           makeLatest: false
