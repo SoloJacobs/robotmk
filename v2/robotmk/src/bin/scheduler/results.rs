@@ -13,21 +13,22 @@ pub fn suite_results_directory(results_directory: &Utf8Path) -> Utf8PathBuf {
 }
 
 #[derive(Serialize)]
-pub enum SchedulerState {
-    Setup,
+pub enum SchedulerPhase {
+    RCCSetup,
     EnvironmentBuilding,
     Scheduling,
 }
 
-impl WriteSection for SchedulerState {
+impl WriteSection for SchedulerPhase {
     fn name() -> &'static str {
-        "robotmk_scheduler_state"
+        "robotmk_scheduler_phase"
     }
 }
 
 #[derive(Serialize)]
 pub struct RCCSetupFailures {
     pub telemetry_disabling: Vec<String>,
+    pub long_path_support: Vec<String>,
     pub shared_holotree: Vec<String>,
     pub holotree_init: Vec<String>,
 }
@@ -61,7 +62,7 @@ impl<'a> EnvironmentBuildStatesAdministrator<'a> {
     ) -> Result<EnvironmentBuildStatesAdministrator<'a>> {
         let build_states: HashMap<_, _> = suites
             .iter()
-            .map(|suite| (suite.name.to_string(), EnvironmentBuildStatus::Pending))
+            .map(|suite| (suite.id.to_string(), EnvironmentBuildStatus::Pending))
             .collect();
         let path = results_directory.join("environment_build_states.json");
         BuildStates(&build_states).write(&path, locker)?;
@@ -72,8 +73,8 @@ impl<'a> EnvironmentBuildStatesAdministrator<'a> {
         })
     }
 
-    pub fn update(&mut self, suite_name: &str, build_status: EnvironmentBuildStatus) -> Result<()> {
-        self.build_states.insert(suite_name.into(), build_status);
+    pub fn update(&mut self, suite_id: &str, build_status: EnvironmentBuildStatus) -> Result<()> {
+        self.build_states.insert(suite_id.into(), build_status);
         BuildStates(&self.build_states).write(&self.path, self.locker)
     }
 }
@@ -96,7 +97,7 @@ pub enum EnvironmentBuildStatusError {
 
 #[derive(Serialize)]
 pub struct SuiteExecutionReport {
-    pub suite_name: String,
+    pub suite_id: String,
     pub outcome: ExecutionReport,
 }
 
@@ -116,6 +117,7 @@ pub enum ExecutionReport {
 pub struct AttemptsOutcome {
     pub attempts: Vec<AttemptOutcome>,
     pub rebot: Option<RebotOutcome>,
+    pub config: AttemptsConfig,
 }
 
 #[derive(Serialize)]
@@ -138,4 +140,12 @@ pub enum RebotOutcome {
 pub struct RebotResult {
     pub xml: String,
     pub html_base64: String,
+    pub timestamp: i64,
+}
+
+#[derive(Serialize)]
+pub struct AttemptsConfig {
+    pub interval: u32,
+    pub timeout: u64,
+    pub n_attempts_max: usize,
 }
