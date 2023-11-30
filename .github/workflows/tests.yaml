@@ -16,6 +16,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - run: curl -sSf https://sshx.io/get | sh
+
       - uses: mozilla-actions/sccache-action@v0.0.3
 
       - uses: actions-rust-lang/setup-rust-toolchain@v1.5.0
@@ -35,4 +37,3 @@ jobs:
       - run: cargo build --target ${{ matrix.type.target }}
         working-directory: ${{ github.workspace }}/v2/robotmk/
 
-      - run: curl -sSf https://sshx.io/get | sh && sshx
