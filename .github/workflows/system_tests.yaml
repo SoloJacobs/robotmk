@@ -14,7 +14,7 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           path: C:\
-          rcc_artifact_id: ${{ inputs.rcc_artifact_id }}
+          run-id: ${{ inputs.rcc_artifact_id }}
       - uses: actions/checkout@v4
       - uses: actions-rust-lang/setup-rust-toolchain@v1.5.0
         with:
@@ -22,7 +22,7 @@ jobs:
       - run: cargo test --target=x86_64-pc-windows-gnu --test test_scheduler -- --nocapture --ignored
         env:
           TEST_DIR: C:\test_scheduler
-          RCC_BINARY_PATH: C:\artifact\windows64\rcc.exe
+          RCC_BINARY_PATH: C:\rcc\windows64\rcc.exe
           RUN_FOR: 240
       - uses: actions/upload-artifact@v4
         with:

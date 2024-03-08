@@ -17,8 +17,8 @@ jobs:
   rcc:
     uses: ./.github/workflows/rcc.yaml
   system_tests:
-    uses: ./.github/workflows/system_tests.yaml
     needs: rcc
+    uses: ./.github/workflows/system_tests.yaml
     with:
       rcc_artifact_id: ${{ needs.rcc.outputs.rcc_artifact_id }}
   build_robotmk:
