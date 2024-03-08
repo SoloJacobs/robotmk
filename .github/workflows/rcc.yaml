@@ -3,8 +3,9 @@ name: "RCC"
 
 on:
   workflow_call:
-    {}
-
+    outputs:
+      rcc_artifact_id:
+        value: ${{ jobs.upload.outputs.rcc_artifact_id }}
 env:
   RCC_TAG: "b18cdacf4cd9dbc1c921b2c0acc1ab9e7d02dae9"  # Update omd/Licenses.csv in the Checkmk repo when changing this.
   GO_VERSION: "1.20.x"
@@ -48,6 +49,8 @@ jobs:
 
   upload:
     runs-on: ubuntu-latest
+    outputs:
+      rcc_artifact_id: ${{ steps.artifact-upload-step.outputs.artifact-id }}
     needs:
       - build_and_cache
     # See https://github.com/actions/runner/issues/491 for the following condition
@@ -60,7 +63,9 @@ jobs:
           path: build
           key: rcc-${{ env.RCC_TAG }}-${{ env.GO_VERSION }}-${{ env.RUBY_VERSION }}
           fail-on-cache-miss: true
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
+        id: artifact-upload-step
         with:
-          path: build
+          name: rcc
+          path: build/
           if-no-files-found: error
