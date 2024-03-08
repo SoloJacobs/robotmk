@@ -2,12 +2,15 @@
 name: "Build Robotmk"
 
 on:
-  workflow_call: {}
-
+  workflow_call:
+    outputs:
+      artifact_id:
+        value: ${{ jobs.build_robotmk.outputs.artifact_id }}
 jobs:
-  build_robotmk_from_source:
+  build_robotmk:
     runs-on: windows-latest
-
+    outputs:
+      artifact_id: ${{ steps.artifact_upload_step.outputs.artifact_id }}
     steps:
       - uses: actions/checkout@v4
 
@@ -17,8 +20,10 @@ jobs:
 
       - run: cargo build --target=x86_64-pc-windows-gnu --release
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
+        id: artifact_upload_step
         with:
+          name: rmk_windows64
           path: |
             ${{ github.workspace }}/target/x86_64-pc-windows-gnu/release/robotmk_scheduler.exe
             ${{ github.workspace }}/target/x86_64-pc-windows-gnu/release/robotmk_agent_plugin.exe
