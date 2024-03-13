@@ -14,7 +14,7 @@ jobs:
       - run: git config --global user.email "solomon.jacobs@checkmk.com"
       - run: git config --global user.name "Solomon Jacobs"
       - run: git add .
-      - run: git commit -m "Update Cargo.lock" -m "Created automatically." -o text
+      - run: git commit -m "Update Cargo.lock" -m "Created automatically." -o Cargo.lock
       - run: git push origin HEAD
       - name: "Create pull request"
         run: gh pr create -B main -H automation/cargo_update -f
