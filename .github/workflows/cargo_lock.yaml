@@ -16,7 +16,7 @@ jobs:
       - run: echo "t" >> text
       - run: git config --global user.email "solomon.jacobs@checkmk.com"
       - run: git config --global user.name "Solomon Jacobs"
-      - run: git status
+      - run: git add .
       - run: git commit -m "Update Cargo.lock" -m "Created automatically." -o text
       - run: git push origin HEAD
       - name: "Create pull request"
