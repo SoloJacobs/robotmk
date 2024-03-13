@@ -9,9 +9,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions-rust-lang/setup-rust-toolchain@v1.5.0
-      - run: git checkout automation/cargo_update$(date +%s)
+      - run: git checkout -b automation/cargo_update$(date +%s)
       - run: cargo update
-      - run: echo "t" >> text
       - run: git config --global user.email "solomon.jacobs@checkmk.com"
       - run: git config --global user.name "Solomon Jacobs"
       - run: git add .
