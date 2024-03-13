@@ -1,0 +1,25 @@
+name: "Update Cargo.lock"
+on:
+  schedule:
+    - cron: '0 3 * * 1'  # On Monday, 03:00 UTC
+  workflow_dispatch: {}
+jobs:
+  cargo_update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: automation/cargo_update
+      - uses: actions-rust-lang/setup-rust-toolchain@v1.5.0
+      - run: git pull
+      - run: cargo update
+      - run: echo "t" >> text
+      - run: git config --global user.email "solomon.jacobs@checkmk.com"
+      - run: git config --global user.name "Solomon Jacobs"
+      - run: git status
+      - run: git commit -m "Update Cargo.lock" -m "Created automatically." -o text
+      - run: git push origin HEAD
+      - name: "Create pull request"
+        run: gh pr create -B main -H automation/cargo_update -f
+        env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
